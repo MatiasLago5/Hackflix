@@ -11,6 +11,7 @@ import MovieDetails from "./components/MovieDetails";
 import SearchPage from "./components/SearchPage";
 import NotFound404 from "./components/NotFound404";
 import Loader from "./components/Loader";
+import GenreFilter from "./components/GenreFilter";
 
 const API_KEY = "cacf577c0c05da73a88ae76d3eda6396";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -23,6 +24,7 @@ function App() {
   const [hasMore, setHasMore] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStars, setFilterStars] = useState(0);
+  const [selectedGenre, setSelectedGenre] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
 
@@ -40,7 +42,7 @@ function App() {
 
   useEffect(() => {
     fetchMovies(1, true);
-  }, [searchQuery, filterStars]);
+  }, [searchQuery, filterStars, selectedGenre]);
 
   const fetchMovies = (pageToFetch, isNewSearch = false) => {
     setIsLoading(true);
@@ -49,11 +51,14 @@ function App() {
       filterStars > 0
         ? `&vote_average.gte=${ratingThresholds[filterStars]}`
         : "";
+    
+    const genreFilter = selectedGenre ? `&with_genres=${selectedGenre}` : "";
+    
     const endpoint = searchQuery
       ? `${BASE_URL}/search/movie?api_key=${API_KEY}&language=es-ES&query=${encodeURIComponent(
           searchQuery
         )}&page=${pageToFetch}`
-      : `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=es-ES&sort_by=popularity.desc${ratingFilter}&page=${pageToFetch}`;
+      : `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=es-ES&sort_by=popularity.desc${ratingFilter}${genreFilter}&page=${pageToFetch}`;
 
     fetch(endpoint)
       .then((res) => res.json())
@@ -82,6 +87,11 @@ function App() {
 
   const handleFilterChange = (value) => {
     setFilterStars(value);
+    setPage(1);
+  };
+
+  const handleGenreChange = (genreId) => {
+    setSelectedGenre(genreId);
     setPage(1);
   };
 
@@ -123,6 +133,11 @@ function App() {
                     edit={true}
                   />
                 </div>
+                
+                <GenreFilter
+                  selectedGenre={selectedGenre}
+                  onGenreChange={handleGenreChange}
+                />
               </div>
               <InfiniteScroll
                 dataLength={movies.length}
@@ -173,6 +188,10 @@ function App() {
                 setSearchQuery={setSearchQuery}
                 movies={movies}
                 openModal={openModal}
+                selectedGenre={selectedGenre}
+                onGenreChange={handleGenreChange}
+                filterStars={filterStars}
+                onFilterChange={handleFilterChange}
               />
             </div>
           }

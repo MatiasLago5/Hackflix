@@ -1,10 +1,16 @@
 import NeonButton from "./NeonButton";
+import GenreFilter from "./GenreFilter";
+import ReactStars from "./RatingStars";
 
 function SearchPage({
   searchQuery,
   setSearchQuery,
   movies,
   openModal,
+  selectedGenre,
+  onGenreChange,
+  filterStars,
+  onFilterChange,
 }) {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -21,6 +27,31 @@ function SearchPage({
           value={searchQuery}
           onChange={handleSearchChange}
           className="neon-input"
+        />
+      </div>
+
+      {/* Filtros adicionales para la búsqueda */}
+      <div style={{ margin: "30px 0" }}>
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <h3 className="neon-title" style={{ fontSize: "2rem" }}>
+            Filtrá por rating
+          </h3>
+          <ReactStars
+            className="stars"
+            count={5}
+            value={filterStars}
+            onChange={onFilterChange}
+            size={40}
+            color1="lightgray"
+            color2="#ffd700"
+            half={false}
+            edit={true}
+          />
+        </div>
+        
+        <GenreFilter
+          selectedGenre={selectedGenre}
+          onGenreChange={onGenreChange}
         />
       </div>
 
