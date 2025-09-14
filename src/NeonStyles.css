@@ -1,0 +1,175 @@
+body {
+  background: #050801;
+  font-family: "Raleway", sans-serif;
+  font-weight: bold;
+  color: #03e9f4;
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilo general para títulos */
+.neon-title {
+  background: none;
+  color: #03e9f4;
+  text-shadow: 0 0 5px #03e9f4, 0 0 10px #03e9f4, 0 0 20px #03e9f4,
+    0 0 40px #00fff7, 0 0 80px #00fff7;
+  margin-top: 4rem;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  display: block;
+  font-size: 2.3rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Input neon */
+.neon-input {
+  padding: 10px 20px;
+  width: 80%;
+  max-width: 400px;
+  border: none;
+  border-radius: 10px;
+  background: #050801;
+  color: #03e9f4;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 0 5px #03e9f4, 0 0 10px #03e9f4, 0 0 20px #03e9f4;
+  transition: 0.3s;
+  text-align: center;
+  margin: 1rem auto 2rem auto;
+  display: block;
+}
+
+.neon-input:focus {
+  box-shadow: 0 0 10px #fff, 0 0 20px #03e9f4, 0 0 30px #03e9f4;
+}
+
+/* Grid de películas */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  justify-items: center;
+}
+
+/* Tarjeta de película */
+.movie-card {
+  background: #0d0d0d;
+  border: 2px solid #03e9f4;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 250px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 0 5px #03e9f4, 0 0 10px #03e9f4, 0 0 20px #03e9f4;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-family: "Truculenta", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px #03e9f4, 0 0 20px #03e9f4, 0 0 40px #03e9f4;
+}
+
+.movie-poster {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Botón estilo neon */
+.neon-button {
+  position: relative;
+  display: inline-block;
+  padding: 20px 30px;
+  color: #03e9f4;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  overflow: hidden;
+  transition: 0.5s;
+  margin-top: 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.neon-button:hover {
+  background: #03e9f4;
+  color: #050801;
+  box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4,
+    0 0 200px #03e9f4;
+  -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+}
+
+/* Asegura que los botones estén siempre abajo */
+.button-wrapper {
+  margin-top: auto;
+}
+
+/* Mensajes de texto (como "Cargando más películas") */
+.neon-text {
+  color: #03e9f4;
+  text-shadow: 0 0 5px #03e9f4, 0 0 10px #03e9f4;
+  font-weight: bold;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: #0d0d0d;
+  border: 2px solid #03e9f4;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+  color: #bbeef0;
+  box-shadow: 0 0 10px #03e9f4, 0 0 20px #03e9f4, 0 0 40px #03e9f4;
+  text-align: center;
+  font-family: "Truculenta", sans-serif;
+  font-size: 1.5rem;
+}
+
+.movieDetails {
+  color: aliceblue;
+  font-family: "Truculenta", sans-serif;
+  font-size: 2rem;
+  margin-bottom: 10rem;
+}
+
+.movieTitle {
+  font-size: 4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.movie-poster-det {
+  border: 0.5px solid #03e9f4;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: 0 0 5px #03e9f4, 0 0 10px #03e9f4, 0 0 20px #03e9f4;
+}
