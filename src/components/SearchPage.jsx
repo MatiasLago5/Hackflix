@@ -1,6 +1,7 @@
 import NeonButton from "./NeonButton";
 import GenreFilter from "./GenreFilter";
 import ReactStars from "./RatingStars";
+import { useState } from "react";
 
 function SearchPage({
   searchQuery,
@@ -12,8 +13,60 @@ function SearchPage({
   filterStars,
   onFilterChange,
 }) {
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [selectedRating, setSelectedRating] = useState(0);
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const searchMovies = async (reset = false) => {
+    if (!searchQuery.trim()) return;
+
+    setLoading(true);
+
+    const currentPage = reset ? 1 : page;
+    let url = `https://api.themoviedb.org/3/search/movie?api_key=f8b72e2ad393e8b2b49f71b711db5fa0&query=${encodeURIComponent(
+      searchQuery
+    )}&page=${currentPage}&language=es`;
+
+    try {
+      let response = await fetch(url);
+      let data = await response.json();
+      let results = data.results;
+
+      if (selectedRating > 0) {
+        results = results.filter((movie) => movie.vote_average >= selectedRating * 2);
+      }
+
+      if (selectedGenres.length > 0) {
+        results = results.filter((movie) =>
+          movie.genre_ids && selectedGenres.some((genreId) => movie.genre_ids.includes(genreId))
+        );
+      }
+
+      if (reset) {
+        setMovies(results);
+        setPage(2);
+      } else {
+        setMovies((prev) => [...prev, ...results]);
+        setPage(currentPage + 1);
+      }
+    } catch (error) {
+      console.error("Error al buscar películas:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenreChange = (newSelectedGenres) => {
+    setSelectedGenres(newSelectedGenres);
+    if (searchQuery.trim()) {
+      setPage(1);
+      searchMovies(true);
+    }
   };
 
   return (
@@ -30,7 +83,6 @@ function SearchPage({
         />
       </div>
 
-      {/* Filtros adicionales para la búsqueda */}
       <div style={{ margin: "30px 0" }}>
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
           <h3 className="neon-title" style={{ fontSize: "2rem" }}>
@@ -48,7 +100,7 @@ function SearchPage({
             edit={true}
           />
         </div>
-        
+
         <GenreFilter
           selectedGenre={selectedGenre}
           onGenreChange={onGenreChange}
@@ -77,6 +129,7 @@ function SearchPage({
           </div>
         ))}
       </div>
+      {loading && <p className="neon-text">Cargando películas...</p>}
     </div>
   );
 }

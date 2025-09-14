@@ -206,3 +206,151 @@ body {
   color: #03e9f4;
   padding: 8px;
 }
+
+/* Filtro de géneros múltiples */
+.genre-filter-container {
+  position: relative;
+  display: inline-block;
+}
+
+.genre-filter-dropdown {
+  position: relative;
+}
+
+.genre-filter-button {
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #03e9f4;
+  background: rgba(5, 8, 1, 0.9);
+  color: #03e9f4;
+  box-shadow: 0 0 5px #03e9f4, 0 0 10px #03e9f4, 0 0 20px rgba(3, 233, 244, 0.3);
+  cursor: pointer;
+  min-width: 250px;
+  font-family: "Raleway", sans-serif;
+  font-weight: bold;
+  text-align: center;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.genre-filter-button:hover {
+  box-shadow: 0 0 10px #fff, 0 0 20px #03e9f4, 0 0 30px #03e9f4;
+  border-color: #00fff7;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+  color: #03e9f4;
+  font-size: 12px;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+.genre-dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(13, 13, 13, 0.95);
+  border: 2px solid #03e9f4;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 5px 15px rgba(3, 233, 244, 0.3);
+}
+
+.genre-actions {
+  padding: 10px;
+  border-bottom: 1px solid rgba(3, 233, 244, 0.3);
+}
+
+.clear-all-btn {
+  background: none;
+  border: 1px solid #03e9f4;
+  color: #03e9f4;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.clear-all-btn:hover {
+  background: rgba(3, 233, 244, 0.2);
+  box-shadow: 0 0 5px #03e9f4;
+}
+
+.genre-list {
+  padding: 10px 0;
+}
+
+.genre-option {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  cursor: pointer;
+  color: #03e9f4;
+  font-family: "Raleway", sans-serif;
+  font-weight: bold;
+  transition: background 0.2s ease;
+  user-select: none;
+}
+
+.genre-option:hover {
+  background: rgba(3, 233, 244, 0.1);
+}
+
+.genre-option input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #03e9f4;
+  border-radius: 3px;
+  margin-right: 10px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.genre-option input:checked + .checkmark {
+  background: #03e9f4;
+  box-shadow: 0 0 10px rgba(3, 233, 244, 0.5);
+}
+
+.genre-option input:checked + .checkmark::after {
+  content: '✓';
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  color: #050801;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Scrollbar personalizado para la lista de géneros */
+.genre-dropdown-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.genre-dropdown-content::-webkit-scrollbar-track {
+  background: rgba(5, 8, 1, 0.5);
+}
+
+.genre-dropdown-content::-webkit-scrollbar-thumb {
+  background: #03e9f4;
+  border-radius: 3px;
+}
+
+.genre-dropdown-content::-webkit-scrollbar-thumb:hover {
+  background: #00fff7;
+}

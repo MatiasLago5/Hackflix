@@ -4,66 +4,99 @@ import "../NeonStyles.css";
 const API_KEY = "cacf577c0c05da73a88ae76d3eda6396";
 const BASE_URL = "https://api.themoviedb.org/3";
 
-function GenreFilter({ selectedGenre, onGenreChange }) {
+function GenreFilter({ selectedGenres, onGenreChange }) {
   const [genres, setGenres] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=es`
+        );
+        const data = await response.json();
+        setGenres(data.genres);
+      } catch (error) {
+        console.error("Error al obtener géneros:", error);
+      }
+    };
+
     fetchGenres();
   }, []);
 
-  const fetchGenres = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=es-ES`
-      );
-      const data = await response.json();
-      setGenres(data.genres || []);
-    } catch (error) {
-      console.error("Error al obtener géneros:", error);
-    } finally {
-      setIsLoading(false);
+  const handleGenreToggle = (genreId) => {
+    const updatedGenres = selectedGenres.includes(genreId)
+      ? selectedGenres.filter(id => id !== genreId)
+      : [...selectedGenres, genreId];
+    
+    onGenreChange(updatedGenres);
+  };
+
+  const clearAllGenres = () => {
+    onGenreChange([]);
+  };
+
+  const getSelectedGenresText = () => {
+    if (selectedGenres.length === 0) return "Seleccionar géneros";
+    if (selectedGenres.length === 1) {
+      const genre = genres.find(g => g.id === selectedGenres[0]);
+      return genre ? genre.name : "Género seleccionado";
     }
+    return `${selectedGenres.length} géneros seleccionados`;
   };
 
-  const handleGenreChange = (e) => {
-    const genreId = e.target.value === "" ? null : parseInt(e.target.value);
-    onGenreChange(genreId);
-  };
+  // Cerrar dropdown al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".genre-filter-container")) {
+        setIsOpen(false);
+      }
+    };
 
-  if (isLoading) {
-    return <div className="neon-text">Cargando géneros...</div>;
-  }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div style={{ textAlign: "center", margin: "20px 0" }}>
-      <h3 className="neon-title" style={{ fontSize: "2.5rem" }}>
-        Filtrá por género
-      </h3>
-      <select
-        value={selectedGenre || ""}
-        onChange={handleGenreChange}
-        className="neon-select"
-        style={{
-          padding: "10px 15px",
-          fontSize: "16px",
-          borderRadius: "8px",
-          border: "2px solid #00ffff",
-          backgroundColor: "rgba(0, 0, 0, 0.8)",
-          color: "#00ffff",
-          boxShadow: "0 0 10px rgba(0, 255, 255, 0.5)",
-          cursor: "pointer",
-          minWidth: "200px"
-        }}
-      >
-        <option value="">Todos los géneros</option>
-        {genres.map((genre) => (
-          <option key={genre.id} value={genre.id}>
-            {genre.name}
-          </option>
-        ))}
-      </select>
+    <div className="genre-filter-container">
+      <div className="genre-filter-dropdown">
+        <button 
+          className="genre-filter-button"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {getSelectedGenresText()}
+          <span className={`arrow ${isOpen ? 'open' : ''}`}>▼</span>
+        </button>
+        
+        {isOpen && (
+          <div className="genre-dropdown-content">
+            <div className="genre-actions">
+              <button 
+                className="clear-all-btn"
+                onClick={clearAllGenres}
+              >
+                Limpiar todo
+              </button>
+            </div>
+            
+            <div className="genre-list">
+              {genres.map((genre) => (
+                <label key={genre.id} className="genre-option">
+                  <input
+                    type="checkbox"
+                    checked={selectedGenres.includes(genre.id)}
+                    onChange={() => handleGenreToggle(genre.id)}
+                  />
+                  <span className="checkmark"></span>
+                  {genre.name}
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

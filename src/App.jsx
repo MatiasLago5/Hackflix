@@ -24,7 +24,7 @@ function App() {
   const [hasMore, setHasMore] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStars, setFilterStars] = useState(0);
-  const [selectedGenre, setSelectedGenre] = useState(null);
+  const [selectedGenres, setSelectedGenres] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
 
@@ -42,7 +42,7 @@ function App() {
 
   useEffect(() => {
     fetchMovies(1, true);
-  }, [searchQuery, filterStars, selectedGenre]);
+  }, [searchQuery, filterStars, selectedGenres]);
 
   const fetchMovies = (pageToFetch, isNewSearch = false) => {
     setIsLoading(true);
@@ -52,7 +52,9 @@ function App() {
         ? `&vote_average.gte=${ratingThresholds[filterStars]}`
         : "";
     
-    const genreFilter = selectedGenre ? `&with_genres=${selectedGenre}` : "";
+    const genreFilter = selectedGenres.length > 0 
+      ? `&with_genres=${selectedGenres.join(',')}` 
+      : "";
     
     const endpoint = searchQuery
       ? `${BASE_URL}/search/movie?api_key=${API_KEY}&language=es-ES&query=${encodeURIComponent(
@@ -63,10 +65,19 @@ function App() {
     fetch(endpoint)
       .then((res) => res.json())
       .then((data) => {
+        let results = data.results || [];
+        
+        // Si estamos en búsqueda y hay filtros de géneros, aplicarlos manualmente
+        if (searchQuery && selectedGenres.length > 0) {
+          results = results.filter(movie => 
+            movie.genre_ids && selectedGenres.some(genreId => movie.genre_ids.includes(genreId))
+          );
+        }
+        
         if (isNewSearch) {
-          setMovies(data.results || []);
+          setMovies(results);
         } else {
-          setMovies((prev) => [...prev, ...(data.results || [])]);
+          setMovies((prev) => [...prev, ...results]);
         }
         setHasMore(data.page < data.total_pages);
       })
@@ -90,8 +101,8 @@ function App() {
     setPage(1);
   };
 
-  const handleGenreChange = (genreId) => {
-    setSelectedGenre(genreId);
+  const handleGenreChange = (newSelectedGenres) => {
+    setSelectedGenres(newSelectedGenres);
     setPage(1);
   };
 
@@ -134,10 +145,19 @@ function App() {
                   />
                 </div>
                 
-                <GenreFilter
-                  selectedGenre={selectedGenre}
-                  onGenreChange={handleGenreChange}
-                />
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  gap: '2rem', 
+                  marginBottom: '2rem',
+                  flexWrap: 'wrap',
+                  alignItems: 'center'
+                }}>
+                  <GenreFilter
+                    selectedGenres={selectedGenres}
+                    onGenreChange={handleGenreChange}
+                  />
+                </div>
               </div>
               <InfiniteScroll
                 dataLength={movies.length}
@@ -188,7 +208,7 @@ function App() {
                 setSearchQuery={setSearchQuery}
                 movies={movies}
                 openModal={openModal}
-                selectedGenre={selectedGenre}
+                selectedGenres={selectedGenres}
                 onGenreChange={handleGenreChange}
                 filterStars={filterStars}
                 onFilterChange={handleFilterChange}
