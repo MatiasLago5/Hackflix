@@ -91,11 +91,6 @@ function App() {
     setPage(nextPage);
   };
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    setPage(1);
-  };
-
   const handleFilterChange = (value) => {
     setFilterStars(value);
     setPage(1);
@@ -103,6 +98,11 @@ function App() {
 
   const handleGenreChange = (newSelectedGenres) => {
     setSelectedGenres(newSelectedGenres);
+    setPage(1);
+  };
+
+  const handleSearchChange = (newQuery) => {
+    setSearchQuery(newQuery);
     setPage(1);
   };
 
@@ -205,8 +205,9 @@ function App() {
               <NavBar />
               <SearchPage
                 searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
+                setSearchQuery={handleSearchChange}
                 movies={movies}
+                setMovies={setMovies}
                 openModal={openModal}
                 selectedGenres={selectedGenres}
                 onGenreChange={handleGenreChange}
